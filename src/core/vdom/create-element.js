@@ -20,12 +20,13 @@ import {
   simpleNormalizeChildren
 } from './helpers/index'
 
+// * 子节点规范类型
 const SIMPLE_NORMALIZE = 1
 const ALWAYS_NORMALIZE = 2
 
 // wrapper function for providing a more flexible interface
 // without getting yelled at by flow
-export function createElement (
+export function createElement  (
   context: Component,
   tag: any,
   data: any,
@@ -49,7 +50,7 @@ export function _createElement (
   tag?: string | Class<Component> | Function | Object,
   data?: VNodeData,
   children?: any,
-  normalizationType?: number
+  normalizationType?: number /* 子节点类型, 区分编译生成还是用户手写 */
 ): VNode | Array<VNode> {
   if (isDef(data) && isDef((data: any).__ob__)) {
     process.env.NODE_ENV !== 'production' && warn(
@@ -87,6 +88,7 @@ export function _createElement (
     data.scopedSlots = { default: children[0] }
     children.length = 0
   }
+  // * children 规范化
   if (normalizationType === ALWAYS_NORMALIZE) {
     children = normalizeChildren(children)
   } else if (normalizationType === SIMPLE_NORMALIZE) {
@@ -103,6 +105,7 @@ export function _createElement (
         undefined, undefined, context
       )
     } else if ((!data || !data.pre) && isDef(Ctor = resolveAsset(context.$options, 'components', tag))) {
+      /** 从vm实例的option的components中寻找该tag，存在则就是一个组件，创建相应节点，Ctor为组件的构造类 */
       // component
       vnode = createComponent(Ctor, data, context, children, tag)
     } else {

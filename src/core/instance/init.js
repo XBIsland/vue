@@ -65,6 +65,7 @@ export function initMixin (Vue: Class<Component>) {
       measure(`vue ${vm._name} init`, startTag, endTag)
     }
 
+    // * Vue 实例挂载
     if (vm.$options.el) {
       vm.$mount(vm.$options.el)
     }

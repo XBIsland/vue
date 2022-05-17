@@ -38,7 +38,9 @@ Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
 ): Component {
+  // * 浏览器环境下将 el 转 Dom
   el = el && inBrowser ? query(el) : undefined
+  // * 执行渲染工作
   return mountComponent(this, el, hydrating)
 }
 

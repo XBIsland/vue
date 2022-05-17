@@ -164,6 +164,7 @@ export function mountComponent (
       }
     }
   }
+  // * 执行 beforeMount 钩子回调
   callHook(vm, 'beforeMount')
 
   let updateComponent
@@ -197,6 +198,7 @@ export function mountComponent (
   new Watcher(vm, updateComponent, noop, {
     before () {
       if (vm._isMounted && !vm._isDestroyed) {
+        // * 执行 beforeUpdate 钩子回调
         callHook(vm, 'beforeUpdate')
       }
     }
@@ -205,8 +207,9 @@ export function mountComponent (
 
   // manually mounted instance, call mounted on self
   // mounted is called for render-created child components in its inserted hook
-  if (vm.$vnode == null) {
+  if (vm.$vnode == null) { /*  Vue 实例的父虚拟 Node 为 Null 时标识当前为根 Vue 的实例 */
     vm._isMounted = true
+    // * 执行 mounted 钩子回调
     callHook(vm, 'mounted')
   }
   return vm
