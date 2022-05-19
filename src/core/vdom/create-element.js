@@ -52,6 +52,7 @@ export function _createElement (
   children?: any,
   normalizationType?: number /* 子节点类型, 区分编译生成还是用户手写 */
 ): VNode | Array<VNode> {
+  
   if (isDef(data) && isDef((data: any).__ob__)) {
     process.env.NODE_ENV !== 'production' && warn(
       `Avoid using observed data object as vnode data: ${JSON.stringify(data)}\n` +

@@ -97,7 +97,7 @@ const componentVNodeHooks = {
 }
 
 const hooksToMerge = Object.keys(componentVNodeHooks)
-
+/*创建一个组件节点，返回Vnode节点*/
 export function createComponent (
   Ctor: Class<Component> | Function | Object | void,
   data: ?VNodeData,
@@ -105,19 +105,24 @@ export function createComponent (
   children: ?Array<VNode>,
   tag?: string
 ): VNode | Array<VNode> | void {
+  // 没有传组件构造类直接返回
   if (isUndef(Ctor)) {
     return
   }
 
+   /*_base存放了Vue,作为基类，可以在里面添加扩展*/
   const baseCtor = context.$options._base
 
   // plain options object: turn it into a constructor
+  // * extentd方法: 组件类继承 Vue 基类, 并将继承后的组件构造函数返回赋值给 Ctor
   if (isObject(Ctor)) {
+    // ! 注意这里 Ctor 已经转换成了构造函数
     Ctor = baseCtor.extend(Ctor)
   }
 
   // if at this stage it's not a constructor or an async component factory,
   // reject.
+  /*如果在该阶段Ctor依然不是一个构造函数或者是一个异步组件工厂则直接返回*/ 
   if (typeof Ctor !== 'function') {
     if (process.env.NODE_ENV !== 'production') {
       warn(`Invalid Component definition: ${String(Ctor)}`, context)
