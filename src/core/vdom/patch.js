@@ -73,6 +73,7 @@ export function createPatchFunction (backend) {
 
   const { modules, nodeOps } = backend
 
+  // * 查询 modules hook 存入 cbs
   for (i = 0; i < hooks.length; ++i) {
     cbs[hooks[i]] = []
     for (j = 0; j < modules.length; ++j) {
@@ -696,7 +697,7 @@ export function createPatchFunction (backend) {
       return node.nodeType === (vnode.isComment ? 8 : 3)
     }
   }
-
+  // * oldVnode 为真实 DOM
   return function patch (oldVnode, vnode, hydrating, removeOnly) {
     if (isUndef(vnode)) {
       if (isDef(oldVnode)) invokeDestroyHook(oldVnode)
@@ -740,6 +741,7 @@ export function createPatchFunction (backend) {
           }
           // either not server-rendered, or hydration failed.
           // create an empty node and replace it
+          // oldVnode 转为 VNode 结构
           oldVnode = emptyNodeAt(oldVnode)
         }
 

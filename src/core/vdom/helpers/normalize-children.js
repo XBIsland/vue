@@ -42,9 +42,9 @@ export function simpleNormalizeChildren (children: any) {
  * 另一个场景是当编译 slot、v-for 的时候会产生嵌套数组的情况，会调用 normalizeArrayChildren 方法
  */
 export function normalizeChildren (children: any): ?Array<VNode> {
-  return isPrimitive(children)
+  return isPrimitive(children) /* 基础类型返回 [TextVNode] */
     ? [createTextVNode(children)]
-    : Array.isArray(children)
+    : Array.isArray(children) /* 数组类型进行特殊处理 */
       ? normalizeArrayChildren(children)
       : undefined
 }
@@ -53,6 +53,7 @@ function isTextNode (node): boolean {
   return isDef(node) && isDef(node.text) && isFalse(node.isComment)
 }
 
+// * 递归标准化 children
 function normalizeArrayChildren (children: any, nestedIndex?: string): Array<VNode> {
   const res = []
   let i, c, lastIndex, last
