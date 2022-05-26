@@ -15,7 +15,7 @@ let uid = 0
 export function initMixin (Vue: Class<Component>) {
   Vue.prototype._init = function (options?: Object) {
     const vm: Component = this
-    // a uid
+    // a uid 自增uid
     vm._uid = uid++
 
     let startTag, endTag
@@ -35,10 +35,11 @@ export function initMixin (Vue: Class<Component>) {
       // internal component options needs special treatment.
       initInternalComponent(vm, options)
     } else {
+      // 合并 options 配置
       vm.$options = mergeOptions(
-        resolveConstructorOptions(vm.constructor),
-        options || {},
-        vm
+        resolveConstructorOptions(vm.constructor), // * 父级构造函数 options
+        options || {}, // * 用户配置的 options
+        vm // * 自身 options
       )
     }
     /* istanbul ignore else */
@@ -49,14 +50,14 @@ export function initMixin (Vue: Class<Component>) {
     }
     // expose real self
     vm._self = vm
-    initLifecycle(vm)
-    initEvents(vm)
-    initRender(vm)
-    callHook(vm, 'beforeCreate')
+    initLifecycle(vm) // * 生命周期相关
+    initEvents(vm) // * 事件相关
+    initRender(vm) // * 渲染相关
+    callHook(vm, 'beforeCreate') // * 钩子函数
     initInjections(vm) // resolve injections before data/props
-    initState(vm)
+    initState(vm)  // * props data methods watch computed
     initProvide(vm) // resolve provide after data/props
-    callHook(vm, 'created')
+    callHook(vm, 'created') // * 钩子函数
 
     /* istanbul ignore if */
     if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
@@ -65,7 +66,7 @@ export function initMixin (Vue: Class<Component>) {
       measure(`vue ${vm._name} init`, startTag, endTag)
     }
 
-    // * Vue 实例挂载
+    // * 如果有 el option 进行 Vue 实例挂载，否则需要用户调用 $mount
     if (vm.$options.el) {
       vm.$mount(vm.$options.el)
     }

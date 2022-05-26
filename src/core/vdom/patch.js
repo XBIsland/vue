@@ -699,7 +699,7 @@ export function createPatchFunction (backend) {
   }
   // * oldVnode 为真实 DOM
   return function patch (oldVnode, vnode, hydrating, removeOnly) {
-    if (isUndef(vnode)) {
+    if (isUndef(vnode)) { // * 没有新节点，直接执行destory钩子函数
       if (isDef(oldVnode)) invokeDestroyHook(oldVnode)
       return
     }
@@ -707,13 +707,13 @@ export function createPatchFunction (backend) {
     let isInitialPatch = false
     const insertedVnodeQueue = []
 
-    if (isUndef(oldVnode)) {
+    if (isUndef(oldVnode)) { // * 没有旧节点，表示第一次渲染，直接用新节点生成DOM
       // empty mount (likely as component), create new root element
       isInitialPatch = true
       createElm(vnode, insertedVnodeQueue)
     } else {
       const isRealElement = isDef(oldVnode.nodeType)
-      if (!isRealElement && sameVnode(oldVnode, vnode)) {
+      if (!isRealElement && sameVnode(oldVnode, vnode)) { // 新旧节点一致，调用patchVnode
         // patch existing root node
         patchVnode(oldVnode, vnode, insertedVnodeQueue, null, null, removeOnly)
       } else {

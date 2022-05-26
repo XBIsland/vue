@@ -386,9 +386,9 @@ function assertObjectType (name: string, value: any, vm: ?Component) {
  * Core utility used in both instantiation and inheritance.
  */
 export function mergeOptions (
-  parent: Object,
-  child: Object,
-  vm?: Component
+  parent: Object, // * 父级 options
+  child: Object, // * 子级 options
+  vm?: Component // * 当前实例
 ): Object {
   if (process.env.NODE_ENV !== 'production') {
     checkComponents(child)
@@ -407,6 +407,7 @@ export function mergeOptions (
   // the result of another mergeOptions call.
   // Only merged options has the _base property.
   if (!child._base) {
+    //  * 递归合并 extend 和 mixin
     if (child.extends) {
       parent = mergeOptions(parent, child.extends, vm)
     }
@@ -417,17 +418,22 @@ export function mergeOptions (
     }
   }
 
+  // * 开始真正合并逻辑
   const options = {}
   let key
+  //  * 将 parent 上所有属性合并到 options
   for (key in parent) {
     mergeField(key)
   }
+  //  * 将存在于 child 上且不存在 parent 中的属性合并到 options
   for (key in child) {
     if (!hasOwn(parent, key)) {
       mergeField(key)
     }
   }
   function mergeField (key) {
+    // ！设计模式-策略模式
+    // * 根据不同的 key 有不同的合并策略
     const strat = strats[key] || defaultStrat
     options[key] = strat(parent[key], child[key], vm, key)
   }

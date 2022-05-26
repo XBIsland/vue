@@ -52,6 +52,9 @@ export function initGlobalAPI (Vue: GlobalAPI) {
   }
 
   Vue.options = Object.create(null)
+  // * Vue.options.components = {}
+  // * Vue.options.directives = {}
+  // * Vue.options.filters = {}
   ASSET_TYPES.forEach(type => {
     Vue.options[type + 's'] = Object.create(null)
   })
@@ -60,6 +63,7 @@ export function initGlobalAPI (Vue: GlobalAPI) {
   // components with in Weex's multi-instance scenarios.
   Vue.options._base = Vue
 
+  // * 挂载内置组件 如 keep-alive
   extend(Vue.options.components, builtInComponents)
 
   initUse(Vue)
