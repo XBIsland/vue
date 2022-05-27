@@ -34,19 +34,20 @@ export function initLifecycle (vm: Component) {
 
   // locate first non-abstract parent
   let parent = options.parent
-  if (parent && !options.abstract) {
-    while (parent.$options.abstract && parent.$parent) {
+  if (parent && !options.abstract) { // * vm 存在父级 且 父级不是内置组件（keep-alive/transition）
+    while (parent.$options.abstract && parent.$parent) { // * 遍历向上寻找父级赋值给变量 parent
       parent = parent.$parent
     }
-    parent.$children.push(vm)
+    parent.$children.push(vm) // * 给父级的 $children push 当前 vm
   }
 
-  vm.$parent = parent
-  vm.$root = parent ? parent.$root : vm
+  vm.$parent = parent // * 挂载 $parent
+  vm.$root = parent ? parent.$root : vm // * 挂载 $root
 
-  vm.$children = []
-  vm.$refs = {}
+  vm.$children = [] // * 初始挂载 $children 
+  vm.$refs = {} // * 初始挂载 $refs
 
+  // * 初始挂载私有属性
   vm._watcher = null
   vm._inactive = null
   vm._directInactive = false
@@ -329,6 +330,7 @@ export function callHook (vm: Component, hook: string) {
   const info = `${hook} hook`
   if (handlers) {
     for (let i = 0, j = handlers.length; i < j; i++) {
+      // 循环执行 handlers[i].call(vm)
       invokeWithErrorHandling(handlers[i], vm, null, vm, info)
     }
   }

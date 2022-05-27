@@ -680,7 +680,7 @@ function processAttrs (el) {
   for (i = 0, l = list.length; i < l; i++) {
     name = rawName = list[i].name
     value = list[i].value
-    if (dirRE.test(name)) {
+    if (dirRE.test(name)) {  // * 解析修饰符
       // mark element as dynamic
       el.hasBindings = true
       // modifiers
