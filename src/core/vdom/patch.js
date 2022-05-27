@@ -149,7 +149,7 @@ export function createPatchFunction (backend) {
     const data = vnode.data
     const children = vnode.children
     const tag = vnode.tag
-    if (isDef(tag)) {
+    if (isDef(tag)) { // * 创建元素节点逻辑
       if (process.env.NODE_ENV !== 'production') {
         if (data && data.pre) {
           creatingElmInVPre++
@@ -166,7 +166,7 @@ export function createPatchFunction (backend) {
 
       vnode.elm = vnode.ns
         ? nodeOps.createElementNS(vnode.ns, tag)
-        : nodeOps.createElement(tag, vnode)
+        : nodeOps.createElement(tag, vnode) // * 创建元素节点
       setScope(vnode)
 
       /* istanbul ignore if */
@@ -189,22 +189,22 @@ export function createPatchFunction (backend) {
           insert(parentElm, vnode.elm, refElm)
         }
       } else {
-        createChildren(vnode, children, insertedVnodeQueue)
+        createChildren(vnode, children, insertedVnodeQueue) // * 创建元素节点的子节点
         if (isDef(data)) {
           invokeCreateHooks(vnode, insertedVnodeQueue)
         }
-        insert(parentElm, vnode.elm, refElm)
+        insert(parentElm, vnode.elm, refElm) // * 插入带 Dom 中
       }
 
       if (process.env.NODE_ENV !== 'production' && data && data.pre) {
         creatingElmInVPre--
       }
-    } else if (isTrue(vnode.isComment)) {
+    } else if (isTrue(vnode.isComment)) { // * 创建注释节点
       vnode.elm = nodeOps.createComment(vnode.text)
-      insert(parentElm, vnode.elm, refElm)
-    } else {
+      insert(parentElm, vnode.elm, refElm)// * 插入带 Dom 中
+    } else { // * 创建文本节点
       vnode.elm = nodeOps.createTextNode(vnode.text)
-      insert(parentElm, vnode.elm, refElm)
+      insert(parentElm, vnode.elm, refElm) // * 插入带 Dom 中
     }
   }
 
@@ -699,7 +699,7 @@ export function createPatchFunction (backend) {
   }
   // * oldVnode 为真实 DOM
   return function patch (oldVnode, vnode, hydrating, removeOnly) {
-    if (isUndef(vnode)) { // * 没有新节点，直接执行destory钩子函数
+    if (isUndef(vnode)) {
       if (isDef(oldVnode)) invokeDestroyHook(oldVnode)
       return
     }
@@ -707,13 +707,13 @@ export function createPatchFunction (backend) {
     let isInitialPatch = false
     const insertedVnodeQueue = []
 
-    if (isUndef(oldVnode)) { // * 没有旧节点，表示第一次渲染，直接用新节点生成DOM
+    if (isUndef(oldVnode)) {
       // empty mount (likely as component), create new root element
       isInitialPatch = true
       createElm(vnode, insertedVnodeQueue)
     } else {
       const isRealElement = isDef(oldVnode.nodeType)
-      if (!isRealElement && sameVnode(oldVnode, vnode)) { // 新旧节点一致，调用patchVnode
+      if (!isRealElement && sameVnode(oldVnode, vnode)) {
         // patch existing root node
         patchVnode(oldVnode, vnode, insertedVnodeQueue, null, null, removeOnly)
       } else {
