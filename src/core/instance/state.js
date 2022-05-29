@@ -46,7 +46,7 @@ export function proxy (target: Object, sourceKey: string, key: string) {
 }
 
 export function initState (vm: Component) {
-  vm._watchers = []
+  vm._watchers = [] // * 存储 vm 所有 Watcher 实例
   const opts = vm.$options
   if (opts.props) initProps(vm, opts.props)
   if (opts.methods) initMethods(vm, opts.methods)
@@ -62,18 +62,25 @@ export function initState (vm: Component) {
 }
 
 function initProps (vm: Component, propsOptions: Object) {
+  // * 获取父组件传入的真实 props 数据
   const propsData = vm.$options.propsData || {}
+  // * 初始化 _props，这里 props 为指向 vm._props 的指针
   const props = vm._props = {}
   // cache prop keys so that future props updates can iterate using Array
   // instead of dynamic object key enumeration.
+  // * 初始化 _propKeys ，这里 keys 为指向 vm._propKeys 的指针
   const keys = vm.$options._propKeys = []
+  // * 是否为根组件
   const isRoot = !vm.$parent
-  // root instance props should be converted
+  // root instance props should be converted 
+  // * 不是根组件，不需要将 props 转为响应式
   if (!isRoot) {
     toggleObserving(false)
   }
   for (const key in propsOptions) {
+    // * 存储键名
     keys.push(key)
+    //  * props 相关校验
     const value = validateProp(key, propsOptions, propsData, vm)
     /* istanbul ignore else */
     if (process.env.NODE_ENV !== 'production') {
@@ -85,6 +92,7 @@ function initProps (vm: Component, propsOptions: Object) {
           vm
         )
       }
+      // * 将 key value 添加到 _props 中
       defineReactive(props, key, value, () => {
         if (!isRoot && !isUpdatingChildComponent) {
           warn(
