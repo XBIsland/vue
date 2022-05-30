@@ -32,7 +32,7 @@ export default class Watcher {
   user: boolean;
   lazy: boolean;
   sync: boolean;
-  dirty: boolean;
+  dirty: boolean; // * 用于标记计算属性返回值是否有变化
   active: boolean;
   deps: Array<Dep>;
   newDeps: Array<Dep>;
@@ -163,7 +163,7 @@ export default class Watcher {
    */
   update () {
     /* istanbul ignore else */
-    if (this.lazy) {
+    if (this.lazy) { // * computed watcher 依赖数据变化时, dirty = true 标识数据已改变
       this.dirty = true
     } else if (this.sync) {
       this.run()
